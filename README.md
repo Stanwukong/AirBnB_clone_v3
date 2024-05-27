@@ -1,12 +1,12 @@
 # AirBnB Clone - The RESTful API
-The console is the first segment of the AirBnB project at Holberton School that will collectively cover fundamental concepts of higher level programming. The goal of AirBnB project is to eventually deploy our server a simple copy of the AirBnB Website(HBnB). A command interpreter is created in this segment to manage objects for the AirBnB(HBnB) website.
+The RESTful API is a crucial component of the AirBnB project at Holberton School. The goal of the AirBnB project is to eventually deploy our server as a simple copy of the AirBnB Website (HBnB). This segment involves creating a RESTful API to manage objects for the AirBnB (HBnB) website, which will cover fundamental concepts of web development and backend programming.
 
-#### Functionalities of this command interpreter:
-* Create a new object (ex: a new User or a new Place)
-* Retrieve an object from a file, a database etc...
-* Do operations on objects (count, compute stats, etc...)
-* Update attributes of an object
-* Destroy an object
+#### Functionalities of this RESTful API:
+- Create a new resource (e.g., a new User or a new Place)
+- Retrieve a resource from a file, a database, etc.
+- Perform operations on resources (count, compute statistics, etc.)
+- Update attributes of a resource
+- Destroy a resource
 
 ## Table of Content
 * [Environment](#environment)
@@ -22,7 +22,7 @@ The console is the first segment of the AirBnB project at Holberton School that 
 This project is interpreted/tested on Ubuntu 14.04 LTS using python3 (version 3.4.3)
 
 ## Installation
-* Clone this repository: `git clone "https://github.com/alexaorrico/AirBnB_clone.git"`
+* Clone this repository: `git clone "https://github.com/stanwukong/AirBnB_clone.git"`
 * Access AirBnb directory: `cd AirBnB_clone`
 * Run hbnb(interactively): `./console` and enter command
 * Run hbnb(non-interactively): `echo "<command>" | ./console.py`

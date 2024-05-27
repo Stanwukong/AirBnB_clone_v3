@@ -1,4 +1,4 @@
-# AirBnB Clone - The Console
+# AirBnB Clone - The RESTful API
 The console is the first segment of the AirBnB project at Holberton School that will collectively cover fundamental concepts of higher level programming. The goal of AirBnB project is to eventually deploy our server a simple copy of the AirBnB Website(HBnB). A command interpreter is created in this segment to manage objects for the AirBnB(HBnB) website.
 
 #### Functionalities of this command interpreter:
@@ -150,13 +150,57 @@ EOF  all  create  destroy  help  quit  show  update
 (hbnb) quit
 ```
 
+## To run the API, use the following command:
+```python
+python3 -m api.v1.app
+```
+The API will be available at `http://localhost:5000/api/v1`.
+
+## Examples of use
+Here are some example API calls:
+
+- Create a new user:
+```bash
+POST /users
+{
+    "email": "user@mail.com",
+    "password": "password123",
+    "first_name": "John",
+    "last_name": "Smith"
+}
+```
+
+- Retrieve all users:
+```bash
+GET /users
+```
+
+- Retrieve a specific user:
+```bash
+GET /users/<user_id>
+```
+
+- Update a user:
+```bash
+PUT /users/<user_id>
+{
+    "first_name": "Jane"
+}
+```
+
+- Delete a user:
+```bash
+DELETE /users/<user_id>
+```
+
 ## Bugs
 No known bugs at this time. 
 
 ## Authors
 Alexa Orrico - [Github](https://github.com/alexaorrico) / [Twitter](https://twitter.com/alexa_orrico)  
 Jennifer Huang - [Github](https://github.com/jhuang10123) / [Twitter](https://twitter.com/earthtojhuang)
+Femi Ajanaku - [Github](https://github.com/Stanwukong) / [Twitter](https://twitter.com/home)
+Joel Iziren - [Github]()
 
-Second part of Airbnb: Joann Vuong
 ## License
 Public Domain. No copy write protection. 

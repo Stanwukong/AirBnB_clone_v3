@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """Test BaseModel for expected behavior and documentation"""
-from datetime import datetime
+from datetime import datetime, timedelta
 import inspect
 import models
 import pep8 as pycodestyle
@@ -25,7 +25,7 @@ class TestBaseModelDocs(unittest.TestCase):
                      'tests/test_models/test_base_model.py']:
             with self.subTest(path=path):
                 errors = pycodestyle.Checker(path).check_all()
-                self.assertEqual(errors, 0)
+                self.assertEqual(errors, 0, )
 
     def test_module_docstring(self):
         """Test for the existence of module docstring"""

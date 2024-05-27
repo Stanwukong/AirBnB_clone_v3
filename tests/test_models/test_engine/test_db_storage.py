@@ -6,6 +6,7 @@ Contains the TestDBStorageDocs and TestDBStorage classes
 from datetime import datetime
 import inspect
 import models
+from models import storage
 from models.engine import db_storage
 from models.amenity import Amenity
 from models.base_model import BaseModel
@@ -66,6 +67,21 @@ test_db_storage.py'])
                              "{:s} method needs a docstring".format(func[0]))
             self.assertTrue(len(func[1].__doc__) >= 1,
                             "{:s} method needs a docstring".format(func[0]))
+            
+    def test_get(self):
+        """Test the get method"""
+        user_id = self.user.id
+        state_id = self.state.id
+        self.assertEqual(storage.get(User, user_id), self.user)
+        self.assertEqual(storage.get(State, state_id), self.state)
+        self.assertIsNone(storage.get(User, "non-existent-id"))
+
+    def test_count(self):
+        """Test the count method"""
+        initial_count = storage.count()
+        self.assertEqual(storage.count(User), 1)
+        self.assertEqual(storage.count(State), 1)
+        self.assertEqual(storage.count(), initial_count)
 
 
 class TestFileStorage(unittest.TestCase):
@@ -86,3 +102,20 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_get(self):
+        """Test the get method"""
+        user_id = self.user.id
+        state_id = self.state.id
+        self.assertEqual(storage.get(User, user_id), self.user)
+        self.assertEqual(storage.get(State, state_id), self.state)
+        self.assertIsNone(storage.get(User, "non-existent-id"))
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_count(self):
+        """Test the count method"""
+        initial_count = storage.count()
+        self.assertEqual(storage.count(User), 1)
+        self.assertEqual(storage.count(State), 1)
+        self.assertEqual(storage.count(), initial_count)

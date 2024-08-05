@@ -6,7 +6,6 @@ Contains the TestFileStorageDocs classes
 from datetime import datetime
 import inspect
 import models
-from models import storage
 from models.engine import file_storage
 from models.amenity import Amenity
 from models.base_model import BaseModel
@@ -115,19 +114,51 @@ class TestFileStorage(unittest.TestCase):
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
 
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
-    def test_get(self):
-        """Test the get method"""
-        user_id = self.user.id
-        state_id = self.state.id
-        self.assertEqual(storage.get(User, user_id), self.user)
-        self.assertEqual(storage.get(State, state_id), self.state)
-        self.assertIsNone(storage.get(User, "non-existent-id"))
+    def test_get_too_many_args(self):
+        """tests get with too many args"""
+        with self.assertRaises(TypeError):
+            models.storage.get()
 
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
-    def test_count(self):
-        """Test the count method"""
-        initial_count = storage.count()
-        self.assertEqual(storage.count(User), 1)
-        self.assertEqual(storage.count(State), 1)
-        self.assertEqual(storage.count(), initial_count)
+    def test_get_too_few_args(self):
+        """tests get with too few args"""
+        with self.assertRaises(TypeError):
+            models.storage.get("1", "2", "3")
+
+    def test_get_type_cls(self):
+        """tests get when type of cls is wrong"""
+        self.assertEqual(models.storage.get([], "1111"), None)
+
+    def test_get_type_id(self):
+        """tests get when type of id is wrong"""
+        self.assertEqual(models.storage.get("State", []), None)
+
+    def test_get_no_class(self):
+        """tests get when cls does not exist"""
+        self.assertEqual(models.storage.get("NotAClass", "11111"), None)
+
+    def test_get_no_id(self):
+        """tests get when id does not exist"""
+        self.assertEqual(models.storage.get("State", "1111"), None)
+
+    def test_count_all(self):
+        """Tests all objects counted properly when counted"""
+        self.assertEqual(
+            models.storage.count(None), len(models.storage.all()))
+
+    def test_count_none(self):
+        """Test that count properly counts objects"""
+        self.assertFalse(models.storage.count("NotAClass"))
+
+    def test_count_bad_type(self):
+        """Test that count properly counts when given wrong type"""
+        self.assertFalse(models.storage.count({'hi': 'bye'}))
+
+    def test_count_works(self):
+        """Test when actual class given, works"""
+        self.assertEqual(
+            models.storage.count("State"), len(models.storage.all(State)))
+
+    def test_count_too_many_args(self):
+        """Tests failure when too many args"""
+        with self.assertRaises(TypeError):
+            models.storage.count("1", "2")

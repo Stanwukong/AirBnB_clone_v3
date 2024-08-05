@@ -6,7 +6,6 @@ Contains the TestDBStorageDocs and TestDBStorage classes
 from datetime import datetime
 import inspect
 import models
-from models import storage
 from models.engine import db_storage
 from models.amenity import Amenity
 from models.base_model import BaseModel
@@ -67,21 +66,6 @@ test_db_storage.py'])
                              "{:s} method needs a docstring".format(func[0]))
             self.assertTrue(len(func[1].__doc__) >= 1,
                             "{:s} method needs a docstring".format(func[0]))
-            
-    def test_get(self):
-        """Test the get method"""
-        user_id = self.user.id
-        state_id = self.state.id
-        self.assertEqual(storage.get(User, user_id), self.user)
-        self.assertEqual(storage.get(State, state_id), self.state)
-        self.assertIsNone(storage.get(User, "non-existent-id"))
-
-    def test_count(self):
-        """Test the count method"""
-        initial_count = storage.count()
-        self.assertEqual(storage.count(User), 1)
-        self.assertEqual(storage.count(State), 1)
-        self.assertEqual(storage.count(), initial_count)
 
 
 class TestFileStorage(unittest.TestCase):
@@ -105,17 +89,56 @@ class TestFileStorage(unittest.TestCase):
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_get(self):
-        """Test the get method"""
-        user_id = self.user.id
-        state_id = self.state.id
-        self.assertEqual(storage.get(User, user_id), self.user)
-        self.assertEqual(storage.get(State, state_id), self.state)
-        self.assertIsNone(storage.get(User, "non-existent-id"))
+        """Test that the get properly gets objects"""
+        obj = State(name="Test")
+        obj.save()
+        got_obj = models.storage.get('State', obj.id)
+        self.assertIs(obj, got_obj)
+
+        obj.delete()
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_get_fail(self):
+        """Test that the get properly gets objects"""
+        obj = State(name="Test")
+        obj.save()
+        got_obj = models.storage.get('ls', obj.id)
+        self.assertIsNot(obj, got_obj)
+
+        obj.delete()
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_count(self):
-        """Test the count method"""
-        initial_count = storage.count()
-        self.assertEqual(storage.count(User), 1)
-        self.assertEqual(storage.count(State), 1)
-        self.assertEqual(storage.count(), initial_count)
+        """Test that the count properly counts objects"""
+        got_obj_count = models.storage.count()
+        obj_count = len(models.storage.all())
+        self.assertEqual(got_obj_count, obj_count)
+
+        got_obj_count = models.storage.count('State')
+        obj_count = len(models.storage.all('State'))
+        self.assertEqual(got_obj_count, obj_count)
+
+    def test_count_too_many_args(self):
+        """Tests failure when too many args"""
+        with self.assertRaises(TypeError):
+            models.storage.count("1", "2")
+
+    def test_count_none(self):
+        """Test that count properly counts objects"""
+        self.assertFalse(models.storage.count("NotAClass"))
+
+    def test_count_bad_type(self):
+        """Test that count properly counts when given wrong type"""
+        self.assertFalse(models.storage.count({'hi': 'bye'}))
+
+    def test_get_type_id(self):
+        """tests get when type of id is wrong"""
+        self.assertEqual(models.storage.get("State", []), None)
+
+    def test_get_no_class(self):
+        """tests get when cls does not exist"""
+        self.assertEqual(models.storage.get("NotAClass", "11111"), None)
+
+    def test_get_no_id(self):
+        """tests get when id does not exist"""
+        self.assertEqual(models.storage.get("State", "1111"), None)
